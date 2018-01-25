@@ -14,17 +14,17 @@ from math import exp
 class Player:
 
 	
-	def __init__(self, goal, ball, states, actions, Q, pi, state_state, alpha=1, decay = .9999954, gamma = .9, epsilon=.4):  #T, cool_down, subField, partition_r,
+	def __init__(self, goal, states, actions, Q, V, pi, start_state, alpha=1, decay = .9999954, gamma = .9, epsilon=.4 ):  #T, cool_down, subField, partition_r,
 	
 		self.goal = goal
-		self.ball = ball
+		#self.ball = ball
 		self.actions = actions
 		self.states = states
 		self.Q = Q
 		self.pi = pi
-		self.V =  {s: 0 for s in states}
+		self.V = V
 		for g in self.goal:
-			self.V[g] = 1000
+			self.V[g, True] = 1000
 		
 		#######################
 		self.alpha = alpha
@@ -35,10 +35,10 @@ class Player:
 		self.T = 0
 		self.cool_down = 0
 		#######################
-		self.partition_r = 0
+		self.partition_r = 1000
 		self.subField = []
 		#######################
-		self.current_state = (0, 0)
+		self.current_state = start_state
 		# self.subField = None
 
 		
@@ -47,7 +47,7 @@ class Player:
 
 	def takeAction(self):
 
-		if self.current_state in self.subField:
+		if self.current_state[0] in self.subField:
 			return self.exploration()
 		else:
 			return self.exploit()
